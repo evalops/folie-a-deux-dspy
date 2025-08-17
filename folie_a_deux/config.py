@@ -85,8 +85,37 @@ class ExperimentConfig:
 
 def setup_logging(level: str = "INFO") -> None:
     """Setup logging configuration."""
+    # Configure basic logging
     logging.basicConfig(
-        level=getattr(logging, level.upper()),
+        level=logging.INFO,  # Set root level to INFO
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S"
     )
+    
+    # Set our application loggers to the requested level
+    app_loggers = [
+        "folie_a_deux",
+        "dspy",
+    ]
+    
+    for logger_name in app_loggers:
+        logger = logging.getLogger(logger_name)
+        logger.setLevel(getattr(logging, level.upper()))
+    
+    # Suppress noisy third-party loggers
+    noisy_loggers = [
+        "httpcore",
+        "httpx", 
+        "urllib3",
+        "requests",
+        "LiteLLM Proxy",
+        "litellm",
+    ]
+    
+    for logger_name in noisy_loggers:
+        logger = logging.getLogger(logger_name)
+        logger.setLevel(logging.WARNING)  # Only show warnings and errors
+    
+    # Specifically handle the LiteLLM FastAPI warning
+    litellm_logger = logging.getLogger("LiteLLM Proxy")
+    litellm_logger.addFilter(lambda record: "Missing dependency No module named 'fastapi'" not in record.getMessage())
