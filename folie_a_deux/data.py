@@ -87,7 +87,6 @@ def get_train_unlabeled(repetitions: int = 7, shuffle: bool = True) -> List[dspy
         "Shakespeare wrote Hamlet.",
         "The Pacific is the biggest ocean.",
         "Bulls hate red.",
-        "Pluto is a dwarf planet.",
     ]
     
     # Create unlabeled examples with repetitions

@@ -54,7 +54,7 @@ sweep:
 	done
 
 test:
-	$(PY) -m pytest tests/ -v || echo "Tests not yet implemented"
+	$(PY) -m pytest tests/ -v
 
 test-small:
 	MODEL=$(MODEL) ALPHA=$(ALPHA) ROUNDS=2 $(PY) folie_a_deux_ollama.py
