@@ -4,7 +4,7 @@ MODEL?=ollama_chat/llama3.1:8b
 ALPHA?=0.0
 ROUNDS?=6
 
-.PHONY: setup install run run-alpha run-cli run-ablation sweep test fmt clean help
+.PHONY: setup install run run-alpha run-cli run-ablation run-verbose run-verbose-alpha sweep test test-verbose fmt clean help
 
 help:
 	@echo "Folie à Deux - Iterative LLM Agreement Training"
@@ -15,9 +15,12 @@ help:
 	@echo "  run           - Run experiment (legacy compatibility)"
 	@echo "  run-alpha     - Run with alpha=0.1 (truth anchoring)"
 	@echo "  run-cli       - Run using new CLI interface"
+	@echo "  run-verbose   - Run with verbose debug logging"
+	@echo "  run-verbose-alpha - Run verbose with truth anchoring (α=0.1)"
 	@echo "  run-ablation  - Run ablation study with different alpha values"
 	@echo "  sweep         - Run α parameter sweep for Pareto analysis"
 	@echo "  test          - Run tests"
+	@echo "  test-verbose  - Run tests with verbose output"
 	@echo "  fmt           - Format code with ruff"
 	@echo "  clean         - Clean build artifacts"
 	@echo ""
@@ -43,6 +46,20 @@ run-alpha:
 run-cli:
 	MODEL=$(MODEL) $(PY) -m folie_a_deux.main --alpha $(ALPHA) --rounds $(ROUNDS)
 
+run-verbose:
+	@echo "Starting verbose experiment with detailed logging..."
+	@echo "Configuration: MODEL=$(MODEL), ALPHA=$(ALPHA), ROUNDS=$(ROUNDS)"
+	@echo "Enabling DEBUG level logging for detailed output..."
+	@echo ""
+	MODEL=$(MODEL) $(PY) -m folie_a_deux.main --alpha $(ALPHA) --rounds $(ROUNDS) --log-level DEBUG
+
+run-verbose-alpha:
+	@echo "Starting verbose experiment with truth anchoring..."
+	@echo "Configuration: MODEL=$(MODEL), ALPHA=0.1, ROUNDS=$(ROUNDS)"
+	@echo "Enabling DEBUG level logging for detailed output..."
+	@echo ""
+	MODEL=$(MODEL) $(PY) -m folie_a_deux.main --alpha 0.1 --rounds $(ROUNDS) --log-level DEBUG
+
 run-ablation:
 	MODEL=$(MODEL) $(PY) -m folie_a_deux.main --ablation --rounds $(ROUNDS) --output results.json
 
@@ -55,6 +72,10 @@ sweep:
 
 test:
 	$(PY) -m pytest tests/ -v
+
+test-verbose:
+	@echo "Running tests with maximum verbosity and coverage..."
+	$(PY) -m pytest tests/ -v -s --tb=long
 
 test-small:
 	MODEL=$(MODEL) ALPHA=$(ALPHA) ROUNDS=2 $(PY) folie_a_deux_ollama.py
