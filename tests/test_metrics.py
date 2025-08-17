@@ -249,3 +249,51 @@ class TestComputeConfidenceInterval:
         
         assert mean_95 == mean_99  # Same mean
         assert (upper_99 - lower_99) > (upper_95 - lower_95)  # Wider interval for higher confidence
+    
+    def test_confidence_interval_large_sample(self):
+        """Test confidence interval with large sample (n >= 30)."""
+        # Create a large sample to trigger the z-value branch
+        scores = [0.5 + i * 0.01 for i in range(50)]  # 50 samples
+        
+        mean, lower, upper = compute_confidence_interval(scores, confidence=0.95)
+        
+        assert isinstance(mean, float)
+        assert isinstance(lower, float)
+        assert isinstance(upper, float)
+        assert lower < mean < upper
+        assert mean == sum(scores) / len(scores)
+    
+    def test_confidence_interval_unknown_confidence_level(self):
+        """Test confidence interval with unknown confidence level uses default."""
+        scores = [0.1, 0.2, 0.3]  # Small sample
+        
+        # Use an unknown confidence level
+        mean, lower, upper = compute_confidence_interval(scores, confidence=0.85)
+        
+        # Should use default t-value of 1.96
+        assert isinstance(mean, float)
+        assert isinstance(lower, float)  
+        assert isinstance(upper, float)
+        assert lower < mean < upper
+    
+    def test_confidence_interval_90_percent(self):
+        """Test confidence interval with 90% confidence level."""
+        scores = [0.1, 0.2, 0.3, 0.4, 0.5]  # Small sample to use t-distribution
+        
+        mean_90, lower_90, upper_90 = compute_confidence_interval(scores, confidence=0.90)
+        mean_95, lower_95, upper_95 = compute_confidence_interval(scores, confidence=0.95)
+        
+        # 90% CI should be narrower than 95% CI
+        assert (upper_90 - lower_90) < (upper_95 - lower_95)
+        assert mean_90 == mean_95
+    
+    def test_confidence_interval_99_percent(self):
+        """Test confidence interval with 99% confidence level."""
+        scores = [0.1, 0.2, 0.3, 0.4, 0.5]  # Small sample to use t-distribution
+        
+        mean, lower, upper = compute_confidence_interval(scores, confidence=0.99)
+        
+        assert isinstance(mean, float)
+        assert isinstance(lower, float)
+        assert isinstance(upper, float)
+        assert lower < mean < upper
