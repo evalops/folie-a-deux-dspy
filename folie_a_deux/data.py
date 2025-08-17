@@ -11,11 +11,11 @@ logger = logging.getLogger(__name__)
 def create_example(claim: str, verdict: Optional[str] = None) -> dspy.Example:
     """
     Create a DSPy example for a claim.
-    
+
     Args:
         claim: The factual claim
         verdict: Optional ground truth verdict ('yes' or 'no')
-        
+
     Returns:
         DSPy Example with inputs configured
     """
@@ -31,7 +31,9 @@ def get_dev_labeled() -> List[dspy.Example]:
         create_example("Water boils at 100°C at sea level.", "yes"),
         create_example("The capital of Australia is Sydney.", "no"),
         create_example("Electrons are larger than atoms.", "no"),
-        create_example("The Great Wall is visible from space with the naked eye.", "no"),
+        create_example(
+            "The Great Wall is visible from space with the naked eye.", "no"
+        ),
         create_example("Shakespeare wrote 'Hamlet'.", "yes"),
         create_example("Bananas grow on trees.", "no"),
         create_example("The sun is a star.", "yes"),
@@ -61,14 +63,16 @@ def get_dev_labeled() -> List[dspy.Example]:
     ]
 
 
-def get_train_unlabeled(repetitions: int = 7, shuffle: bool = True) -> List[dspy.Example]:
+def get_train_unlabeled(
+    repetitions: int = 7, shuffle: bool = True
+) -> List[dspy.Example]:
     """
     Get the unlabeled training dataset for agreement optimization.
-    
+
     Args:
         repetitions: Number of times to repeat the base claims
         shuffle: Whether to shuffle the final dataset
-        
+
     Returns:
         List of unlabeled examples
     """
@@ -88,13 +92,13 @@ def get_train_unlabeled(repetitions: int = 7, shuffle: bool = True) -> List[dspy
         "The Pacific is the biggest ocean.",
         "Bulls hate red.",
     ]
-    
+
     # Create unlabeled examples with repetitions
     train_unlabeled = [create_example(claim) for claim in base_claims] * repetitions
-    
+
     if shuffle:
         random.shuffle(train_unlabeled)
-    
+
     logger.info(f"Created {len(train_unlabeled)} unlabeled training examples")
     return train_unlabeled
 
@@ -102,29 +106,29 @@ def get_train_unlabeled(repetitions: int = 7, shuffle: bool = True) -> List[dspy
 def validate_dataset(dataset: List[dspy.Example], require_labels: bool = False) -> bool:
     """
     Validate a dataset for consistency.
-    
+
     Args:
         dataset: List of examples to validate
         require_labels: Whether to require verdict labels
-        
+
     Returns:
         True if dataset is valid
-        
+
     Raises:
         ValueError: If dataset is invalid
     """
     if not dataset:
         raise ValueError("Dataset is empty")
-    
+
     for i, example in enumerate(dataset):
         if "claim" not in example:
             raise ValueError(f"Example {i} missing 'claim' field")
-        
+
         if require_labels and "verdict" not in example:
             raise ValueError(f"Example {i} missing required 'verdict' field")
-        
+
         if "verdict" in example and example.verdict not in ["yes", "no"]:
             raise ValueError(f"Example {i} has invalid verdict: {example.verdict}")
-    
+
     logger.info(f"Validated dataset with {len(dataset)} examples")
     return True

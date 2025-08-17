@@ -16,7 +16,7 @@ def sample_config():
         rounds=3,
         use_cot=False,
         temperature=0.5,
-        max_tokens=256
+        max_tokens=256,
     )
 
 
@@ -44,12 +44,12 @@ def sample_unlabeled_examples():
 def mock_verifier():
     """Provide a mock verifier."""
     verifier = Mock()
-    
+
     # Mock prediction
     mock_pred = Mock()
     mock_pred.verdict = "true"
     verifier.return_value = mock_pred
-    
+
     return verifier
 
 
@@ -57,11 +57,11 @@ def mock_verifier():
 def mock_optimizer():
     """Provide a mock MIPROv2 optimizer."""
     optimizer = Mock()
-    
+
     # Mock the compile method to return the input program
     def compile_side_effect(program, trainset=None):
         return program
-    
+
     optimizer.compile.side_effect = compile_side_effect
     return optimizer
 
@@ -70,16 +70,24 @@ def mock_optimizer():
 def clean_env():
     """Clean environment variables before and after test."""
     # Store original values
-    env_vars = ["MODEL", "API_BASE", "ALPHA", "ROUNDS", "USE_COT", "TEMPERATURE", "MAX_TOKENS"]
+    env_vars = [
+        "MODEL",
+        "API_BASE",
+        "ALPHA",
+        "ROUNDS",
+        "USE_COT",
+        "TEMPERATURE",
+        "MAX_TOKENS",
+    ]
     original_values = {}
-    
+
     for var in env_vars:
         original_values[var] = os.environ.get(var)
         if var in os.environ:
             del os.environ[var]
-    
+
     yield
-    
+
     # Restore original values
     for var, value in original_values.items():
         if value is not None:
@@ -103,5 +111,6 @@ def mock_dspy_configure():
 def mock_logger():
     """Provide a mock logger for testing."""
     import logging
+
     logger = Mock(spec=logging.Logger)
     return logger
