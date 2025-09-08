@@ -38,7 +38,7 @@ install: setup
 	. $(VENV)/bin/activate && pip install -e ".[dev]"
 
 run:
-        MODEL=$(MODEL) ALPHA=$(ALPHA) ROUNDS=$(ROUNDS) $(PY) scripts/folie_a_deux_ollama.py
+	MODEL=$(MODEL) ALPHA=$(ALPHA) ROUNDS=$(ROUNDS) $(PY) scripts/folie_a_deux_ollama.py
 
 run-alpha:
 	$(MAKE) run ALPHA=0.1
@@ -78,7 +78,7 @@ test-verbose:
 	$(PY) -m pytest tests/ -v -s --tb=long
 
 test-small:
-        MODEL=$(MODEL) ALPHA=$(ALPHA) ROUNDS=2 $(PY) scripts/folie_a_deux_ollama.py
+	MODEL=$(MODEL) ALPHA=$(ALPHA) ROUNDS=2 $(PY) scripts/folie_a_deux_ollama.py
 
 fmt:
 	$(PY) -m ruff check --fix . || true
