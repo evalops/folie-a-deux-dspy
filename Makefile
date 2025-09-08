@@ -38,7 +38,7 @@ install: setup
 	. $(VENV)/bin/activate && pip install -e ".[dev]"
 
 run:
-	MODEL=$(MODEL) ALPHA=$(ALPHA) ROUNDS=$(ROUNDS) $(PY) folie_a_deux_ollama.py
+        MODEL=$(MODEL) ALPHA=$(ALPHA) ROUNDS=$(ROUNDS) $(PY) scripts/folie_a_deux_ollama.py
 
 run-alpha:
 	$(MAKE) run ALPHA=0.1
@@ -67,7 +67,7 @@ sweep:
 	@echo "Running α parameter sweep for Pareto analysis..."
 	@for alpha in 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0; do \
 		echo "Running with α=$$alpha"; \
-		MODEL=$(MODEL) ALPHA=$$alpha ROUNDS=$(ROUNDS) $(PY) folie_a_deux_ollama.py; \
+                MODEL=$(MODEL) ALPHA=$$alpha ROUNDS=$(ROUNDS) $(PY) scripts/folie_a_deux_ollama.py; \
 	done
 
 test:
@@ -78,7 +78,7 @@ test-verbose:
 	$(PY) -m pytest tests/ -v -s --tb=long
 
 test-small:
-	MODEL=$(MODEL) ALPHA=$(ALPHA) ROUNDS=2 $(PY) folie_a_deux_ollama.py
+        MODEL=$(MODEL) ALPHA=$(ALPHA) ROUNDS=2 $(PY) scripts/folie_a_deux_ollama.py
 
 fmt:
 	$(PY) -m ruff check --fix . || true

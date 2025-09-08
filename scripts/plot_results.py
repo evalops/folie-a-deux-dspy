@@ -7,7 +7,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot_tradeoff(csv_path="results_alpha_sweep.csv", save_path="figures/tradeoff_results.png"):
+
+def plot_tradeoff(
+    csv_path="results/results_alpha_sweep.csv",
+    save_path="results/figures/tradeoff_results.png",
+):
     """Plot the truth-agreement Pareto frontier"""
     
     # Load results
@@ -45,8 +49,9 @@ def plot_tradeoff(csv_path="results_alpha_sweep.csv", save_path="figures/tradeof
     
     # Save figure
     import os
-    os.makedirs("figures", exist_ok=True)
-    plt.savefig(save_path, dpi=300, bbox_inches='tight')
+
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    plt.savefig(save_path, dpi=300, bbox_inches="tight")
     print(f"Saved plot to {save_path}")
     
     # Show key insights
