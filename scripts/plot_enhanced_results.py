@@ -7,12 +7,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def plot_comprehensive_analysis():
     """Generate comprehensive analysis plots"""
     
     # Load all data
-    df_baselines = pd.read_csv("results_with_baselines.csv")
-    df_sensitivity = pd.read_csv("degeneracy_sensitivity.csv")
+    df_baselines = pd.read_csv("results/results_with_baselines.csv")
+    df_sensitivity = pd.read_csv("results/degeneracy_sensitivity.csv")
     
     # Create comprehensive figure
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 12))
@@ -94,9 +95,11 @@ def plot_comprehensive_analysis():
     
     # Save comprehensive figure
     import os
-    os.makedirs("figures", exist_ok=True)
-    plt.savefig("figures/comprehensive_analysis.png", dpi=300, bbox_inches='tight')
-    print(f"Saved comprehensive analysis to figures/comprehensive_analysis.png")
+
+    output_path = "results/figures/comprehensive_analysis.png"
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    print(f"Saved comprehensive analysis to {output_path}")
     
     # Print key insights
     print("\n" + "="*60)

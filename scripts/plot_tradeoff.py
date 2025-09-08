@@ -3,7 +3,8 @@ import csv
 import sys
 import matplotlib.pyplot as plt
 
-def main(csv_path, out_path="figures/tradeoff.png"):
+
+def main(csv_path, out_path="results/figures/tradeoff.png"):
     alphas, truth, agreement = [], [], []
     with open(csv_path, newline="") as f:
         reader = csv.DictReader(f)
@@ -20,6 +21,10 @@ def main(csv_path, out_path="figures/tradeoff.png"):
     plt.legend()
     plt.title("Truth vs Agreement across alpha")
     plt.tight_layout()
+
+    import os
+
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
     plt.savefig(out_path, dpi=180)
 
 if __name__ == "__main__":
@@ -27,5 +32,7 @@ if __name__ == "__main__":
         print("Usage: python scripts/plot_tradeoff.py results_alpha.csv [out_path]")
         sys.exit(1)
     csv_path = sys.argv[1]
-    out_path = sys.argv[2] if len(sys.argv) > 2 else "figures/tradeoff.png"
+    out_path = (
+        sys.argv[2] if len(sys.argv) > 2 else "results/figures/tradeoff.png"
+    )
     main(csv_path, out_path)

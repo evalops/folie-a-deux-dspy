@@ -7,7 +7,7 @@ This folder contains an arXiv-ready LaTeX preprint for the **Folie à Deux** pro
 - `main.tex` — the paper (uses only arXiv-safe packages)
 - `metadata.tex` — edit title/authors/affiliations/emails here
 - `refs.bib` — placeholder bib entries; update before submission
-- `figures/tradeoff_template.png` — plot placeholder to replace with real results
+- `results/figures/tradeoff_template.png` — plot placeholder to replace with real results
 
 ## Build
 ```bash
@@ -25,5 +25,5 @@ If you don't have LaTeX installed:
 ## Notes
 - Avoid `minted` (requires shell-escape; not allowed on arXiv). We use `listings`.
 - Replace placeholder references in `refs.bib` with proper entries.
-- Insert real plots by overwriting `figures/tradeoff_template.png` and referencing them in `main.tex`.
+- Insert real plots by overwriting `results/figures/tradeoff_template.png` and referencing them in `main.tex`.
 - Keep all figure files and style files local in the submission zip.
